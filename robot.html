@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> The Toy Robot Game </title>
+<style>
+.container {
+
+    width:500px;
+    height:500px;
+    overflow:hidden;
+    background-color:#c6e2ff;
+	padding:1px;
+}
+.image {
+    position:relative;
+    width:50px;
+    height:50px;
+	padding:7px;
+}
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="robot.js"></script>
+
+<script>
+
+
+
+$(document).ready(function(){
+
+var objImg=$("#imgRobot");
+$(objImg).hide();
+var strCmd="";
+
+$("#txtcmd").keyup(function(e) {
+    // the follwoing code will check for enter key i.e key=13
+	// and execute commands accordingly
+	// format is PLACE XPOS,YPOS,DIRECTION
+    if(e.which == 13) {
+	    if ($("#txtcmd").val().indexOf("PLACE")>=0)
+		{
+			strCmd =$.trim($("#txtcmd").val());
+			var strArr=strCmd.split(" ");
+			
+			var strPlace=strArr[0];
+			var strOther=strArr[1];
+			var strOtherArr;
+			//validation for invalid command
+			if ((strOther==undefined) || (strOther.length==0))
+			{
+			  alert("Invalid command");
+			  return false;
+			  
+			}
+			
+			strOtherArr=strOther.split(",");
+			//validation again for invalid position or direction
+			if ( ($.isNumeric(strOtherArr[0])) && ($.isNumeric(strOtherArr[1])) && (Library._isValidDirection(strOtherArr[2])))
+			{
+			var xpos=parseInt(strOtherArr[0]);
+			var ypos=parseInt(strOtherArr[1]);
+			$(objImg).show();
+			// invoking Library functions for PLACING
+			Library.place(xpos,ypos,strOtherArr[2],objImg);
+			
+			return true;
+			}
+			else
+			{
+			   alert('Invalid Command!');
+			   return false;
+			}
+			
+		}
+	   // invoking Library functions for MOVE,LEFT,RIGHT and REPORT
+       var strCommand=$("#txtcmd").val();	
+	   switch (strCommand) { 
+		case 'MOVE': 
+			Library.move(objImg);
+			
+			break;
+		case 'LEFT': 
+			Library.left(objImg);
+			
+			break;
+		case 'RIGHT': 
+			Library.right(objImg);
+			
+			break;
+		case 'REPORT': 
+            Library.report();
+			break;
+		default:
+			alert('Invalid Command!');
+      }
+		
+    }
+});
+    
+
+});
+
+
+
+
+
+
+</script>
+</head>
+
+<body>
+
+
+
+<div class="container">
+    <img id="imgRobot" class="image" src="http://i67.tinypic.com/15f14jb.png"  />
+
+
+</div>
+<br>
+
+<span><b>Please enter Robot commands here and Press Enter --> </b></span><input type="text" id="txtcmd" />
+
+
+
+
+
+
+</body>
+</html>
